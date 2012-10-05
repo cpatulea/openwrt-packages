@@ -1,0 +1,20 @@
+--- a/configure
++++ b/configure
+@@ -244,16 +244,10 @@ check_oss()
+ 			;;
+ 	esac
+ 
+-	OSS_CFLAGS=""
+-	OSS_LIBS=""
+-	msg_checking "for header <sys/soundcard.h>"
+-	if test -f /usr/include/sys/soundcard.h
++	if check_header sys/soundcard.h
+ 	then
+-		msg_result "yes"
+ 		makefile_vars OSS_CFLAGS OSS_LIBS
+ 		return 0
+-	else
+-		msg_result "no"
+ 	fi
+ 	return 1
+ }
