@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=taskwarrior
-PKG_VERSION:=2.0.0
+PKG_VERSION:=2.1.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=task-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.taskwarrior.org/download/
-PKG_MD5SUM:=b850b49f8b69bb4049c07d0914a0f7af
+PKG_MD5SUM:=ff0c712a18a47f79787b971b8d1ff207
 
 PKG_INSTALL:=1
 
