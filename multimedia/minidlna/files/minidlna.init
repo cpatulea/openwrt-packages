@@ -88,7 +88,7 @@ start() {
 
 	mkdir -m 0755 -p $db_dir
 	mkdir -m 0755 -p $log_dir
-	service_start /usr/bin/minidlnad -f "$MINIDLNA_CONFIG_FILE"
+	service_start /usr/bin/minidlnad -f "$MINIDLNA_CONFIG_FILE" -P /var/run/minidlnad.pid
 }
 
 stop() {
