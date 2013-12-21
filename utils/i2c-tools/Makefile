@@ -6,16 +6,15 @@
 #
 
 include $(TOPDIR)/rules.mk
-include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=i2c-tools
-PKG_VERSION:=2013-09-19
+PKG_VERSION:=2013-12-15
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=svn
 PKG_SOURCE_URL:=http://lm-sensors.org/svn/i2c-tools/trunk
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=r6199
+PKG_SOURCE_VERSION:=r6204
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_BUILD_PARALLEL:=1
@@ -62,7 +61,7 @@ define Package/python-smbus/description
  This package contain the python bindings for Linux SMBus access through i2c-dev.
 endef
 
-TARGET_CPPFLAGS += -I$(LINUX_DIR)/include
+TARGET_CPPFLAGS += -I$(PKG_BUILD_DIR)/include
 
 ifdef CONFIG_PACKAGE_python-smbus
   define Build/Compile/python-smbus
