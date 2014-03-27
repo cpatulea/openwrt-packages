@@ -14,7 +14,7 @@
 service_id=$1
 if [ -z "$service_id" ]
 then
-	echo "ERRROR: You must specify a service id (the section name in the /etc/config/ddns file) to initialize dynamic DNS."
+	echo "ERROR: You must specify a service id (the section name in the /etc/config/ddns file) to initialize dynamic DNS."
 	return 1
 fi
 
@@ -89,7 +89,7 @@ then
 	force_unit="hours"
 fi
 
-if [ -z $use_syslog ]
+if [ -z "$use_syslog" ]
 then
 	use_syslog=0
 fi
@@ -102,11 +102,10 @@ fi
 
 #some constants
 
-retrieve_prog="/usr/bin/wget -O - ";
-if [ "x$use_https" = "x1" ]
+retrieve_prog="/usr/bin/wget -O - "
+if [ "$use_https" = "1" ]
 then
-	/usr/bin/wget --version 2>&1 |grep -q "\+ssl"
-	if [ $? -eq 0 ]
+	if /usr/bin/wget --version 2>&1 | grep -q "\+ssl"
 	then
 		if [ -f "$cacert" ]
 		then
@@ -139,10 +138,8 @@ NEWLINE_IFS='
 if [ -n "$service_name" ]
 then
 	#remove any lines not containing data, and then make sure fields are enclosed in double quotes
-	quoted_services=$(cat $service_file |  grep "^[\t ]*[^#]" |  awk ' gsub("\x27", "\"") { if ($1~/^[^\"]*$/) $1="\""$1"\"" }; { if ( $NF~/^[^\"]*$/) $NF="\""$NF"\""  }; { print $0 }' )
+	quoted_services=$(cat $service_file | grep "^[\t ]*[^#]" | awk 'gsub("\x27", "\"") { if ($1~/^[^\"]*$/) $1="\""$1"\"" }; { if ( $NF~/^[^\"]*$/) $NF="\""$NF"\""  }; { print $0 }')
 
-
-	#echo "quoted_services = $quoted_services"
 	OLD_IFS=$IFS
 	IFS=$NEWLINE_IFS
 	for service_line in $quoted_services
@@ -154,14 +151,15 @@ then
 		if [ "$next_name" = "$service_name" ]
 		then
 			update_url=$next_url
+			break
 		fi
 	done
 	IFS=$OLD_IFS
 fi
 
-if [ "x$use_https" = x1 ]
+if [ "$use_https" = 1 ]
 then
-	update_url=$(echo $update_url | sed -e 's/^http:/https:/')
+	update_url="$(echo "$update_url" | sed -e 's/^http:/https:/')"
 fi
 
 verbose_echo "update_url=$update_url"
@@ -172,68 +170,30 @@ then
 	return 0
 fi
 
-#compute update interval in seconds
-case "$force_unit" in
-	"days" )
-		force_interval_seconds=$(($force_interval*60*60*24))
-		;;
-	"hours" )
-		force_interval_seconds=$(($force_interval*60*60))
-		;;
-	"minutes" )
-		force_interval_seconds=$(($force_interval*60))
-		;;
-	"seconds" )
-		force_interval_seconds=$force_interval
-		;;
-	* )
-		#default is hours
-		force_interval_seconds=$(($force_interval*60*60))
-		;;
-esac
+interval_seconds()
+{
+	local value="$1"
+	local unit="$2"
+	local default="$3"
 
+	case "$unit" in
+		"") return 1 ;;
+		days) echo $(($value*60*60*24)) ;;
+		hours) echo $(($value*60*60)) ;;
+		minutes) echo $(($value*60)) ;;
+		seconds) echo "$value" ;;
+		*) interval_seconds "$value" "$default" "" ;;
+	esac
+}
+
+#compute update interval in seconds
+force_interval_seconds=$(interval_seconds "$force_interval" "$force_unit" hours)
 
 #compute check interval in seconds
-case "$check_unit" in
-	"days" )
-		check_interval_seconds=$(($check_interval*60*60*24))
-		;;
-	"hours" )
-		check_interval_seconds=$(($check_interval*60*60))
-		;;
-	"minutes" )
-		check_interval_seconds=$(($check_interval*60))
-		;;
-	"seconds" )
-		check_interval_seconds=$check_interval
-		;;
-	* )
-		#default is seconds
-		check_interval_seconds=$check_interval
-		;;
-esac
-
+check_interval_seconds=$(interval_seconds "$check_interval" "$check_unit" seconds)
 
 #compute retry interval in seconds
-case "$retry_unit" in
-	"days" )
-		retry_interval_seconds=$(($retry_interval*60*60*24))
-		;;
-	"hours" )
-		retry_interval_seconds=$(($retry_interval*60*60))
-		;;
-	"minutes" )
-		retry_interval_seconds=$(($retry_interval*60))
-		;;
-	"seconds" )
-		retry_interval_seconds=$retry_interval
-		;;
-	* )
-		#default is seconds
-		retry_interval_seconds=$retry_interval
-		;;
-esac
-
+retry_interval_seconds=$(interval_seconds "$retry_interval" "$retry_unit" seconds)
 
 verbose_echo "force seconds = $force_interval_seconds"
 verbose_echo "check seconds = $check_interval_seconds"
@@ -247,7 +207,7 @@ then
 		old_pid=$(cat /var/run/dynamic_dns/$service_id.pid)
 		test_match=$(ps | grep "^[\t ]*$old_pid")
 		verbose_echo "old process id (if it exists) = \"$test_match\""
-		if [ -n  "$test_match" ]
+		if [ -n "$test_match" ]
 		then
 			kill $old_pid
 		fi
@@ -257,7 +217,7 @@ else
 	#make dir since it doesn't exist
 	mkdir /var/run/dynamic_dns
 fi
-echo $$ > /var/run/dynamic_dns/$service_id.pid
+echo $$ > "/var/run/dynamic_dns/$service_id.pid"
 
 
 
@@ -281,7 +241,7 @@ verbose_echo "time_since_update = $human_time_since_update hours"
 
 while [ true ]
 do
-	registered_ip=$(echo $(nslookup "$domain" 2>/dev/null) |  grep -o "Name:.*" | grep -o "$ip_regex")
+	registered_ip=$(echo $(nslookup "$domain" 2>/dev/null) | grep -o "Name:.*" | grep -o "$ip_regex")
 	current_ip=$(get_current_ip)
 
 
@@ -294,7 +254,7 @@ do
 	verbose_echo "registered domain ip = $registered_ip"
 
 
-	if [ "$current_ip" != "$registered_ip" ]  || [ $force_interval_seconds -lt $time_since_update ]
+	if [ "$current_ip" != "$registered_ip" ] || [ $force_interval_seconds -lt $time_since_update ]
 	then
 		verbose_echo "update necessary, performing update ..."
 
@@ -333,7 +293,7 @@ do
 		#save the time of the update
 		current_time=$(monotonic_time)
 		last_update=$current_time
-		time_since_update='0'
+		time_since_update=0
 		registered_ip=$current_ip
 
 		human_time=$(date)
@@ -351,10 +311,3 @@ do
 	#sleep for 10 minutes, then re-check ip && time since last update
 	sleep $check_interval_seconds
 done
-
-#should never get here since we're a daemon, but I'll throw it in anyway
-return 0
-
-
-
-
