@@ -8,17 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pulseaudio
-PKG_VERSION:=4.0
-PKG_RELEASE:=4
+PKG_VERSION:=5.0
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://freedesktop.org/software/pulseaudio/releases/
-PKG_MD5SUM:=591f211db2790a7e4d222f2dc6858db3
+PKG_MD5SUM:=c43749838612f4860465e83ed62ca38e
 
 PKG_BUILD_DIR=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=intltool/host
 
 PKG_FIXUP:=autoreconf
+PKG_USE_MIPS16:=0
 
 PKG_INSTALL = 1
 
@@ -162,7 +163,7 @@ define Package/pulseaudio-daemon/install
 		$(1)/usr/bin \
 		$(1)/usr/lib \
 		$(1)/usr/lib/pulseaudio \
-		$(1)/usr/lib/pulse-$(PKG_VERSION)/modules 
+		$(1)/usr/lib/pulse-$(PKG_VERSION)/modules
 
 	$(INSTALL_BIN) \
 		$(PKG_INSTALL_DIR)/usr/bin/pulseaudio \
@@ -203,7 +204,7 @@ define Package/pulseaudio-daemon-avahi/install
 		$(1)/usr/lib \
 		$(1)/usr/lib/pulseaudio \
 		$(1)/usr/lib/pulse-$(PKG_VERSION)/modules \
-		$(1)/etc/dbus-1/system.d 
+		$(1)/etc/dbus-1/system.d
 
 	$(INSTALL_BIN) \
 		$(PKG_INSTALL_DIR)/usr/bin/pulseaudio \

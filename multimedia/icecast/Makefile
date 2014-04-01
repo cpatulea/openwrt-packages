@@ -25,17 +25,17 @@ TREMOR_DIR=$(TREMOR_BUILD_DIR)/ipkg-install/usr
 define Package/icecast
   SECTION:=multimedia
   CATEGORY:=Multimedia
-  DEPENDS:=+libcurl +libxml2 +libxslt +libogg
+  DEPENDS:=+libcurl +libxml2 +libxslt +libogg +libopenssl
   TITLE:=A streaming media server for Ogg/Vorbis and MP3 audio streams
   URL:=http://www.icecast.org/
 endef
 
 define Package/icecast/description
-	Icecast is a streaming media server which currently supports Ogg 
-	Vorbis and MP3 audio streams. It can be used to create an Internet 
-	radio station or a privately running jukebox and many things in 
-	between. It is very versatile in that new formats can be added 
-	relatively easily and supports open standards for commuincation and 
+	Icecast is a streaming media server which currently supports Ogg
+	Vorbis and MP3 audio streams. It can be used to create an Internet
+	radio station or a privately running jukebox and many things in
+	between. It is very versatile in that new formats can be added
+	relatively easily and supports open standards for commuincation and
 	interaction.
 endef
 

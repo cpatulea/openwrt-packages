@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2009 OpenWrt.org
+# Copyright (C) 2007-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zip
 PKG_VERSION:=2.32
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)232.zip
 PKG_SOURCE_URL:=@SF/infozip
@@ -29,9 +29,9 @@ define Package/zip
 endef
 
 define Package/zip/description
-	This is InfoZIP's zip program. It produces files that are fully 
-	compatible with the popular PKZIP program; however, the command line 
-	options are not identical. In other words, the end result is the same, 
+	This is InfoZIP's zip program. It produces files that are fully
+	compatible with the popular PKZIP program; however, the command line
+	options are not identical. In other words, the end result is the same,
 	but the methods differ.
 endef
 
@@ -40,15 +40,14 @@ endef
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) -f unix/Makefile generic \
-		$(TARGET_CONFIGURE_OPTS) \
 		prefix="$(PKG_INSTALL_DIR)/usr" \
 		CFLAGS="$(TARGET_CFLAGS)" \
-		CF="$(TARGET_CFLAGS) -O $(TARGET_CPPFLAGS) -I. -DUNIX" \
+		CC="$(TARGET_CC) $(TARGET_CFLAGS) -O $(TARGET_CPPFLAGS) -I. -DUNIX" \
 		LD="$(TARGET_CC) $(TARGET_LDFLAGS)" \
 		install
 endef
 
-define Package/zip/install	
+define Package/zip/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 endef

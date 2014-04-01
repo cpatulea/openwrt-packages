@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 OpenWrt.org
+# Copyright (C) 2013-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -34,9 +34,11 @@ endef
 define Package/dump1090/description
  Dump1090 is a Mode S decoder specifically designed for RTLSDR devices.
  Embedded HTTP server that displays the currently detected aircrafts on
- Google Maps. Network output in Basestation and AVR formats. 
+ Google Maps. Network output in Basestation and AVR formats.
 endef
 
+MAKE_FLAGS += \
+	CFLAGS="$(TARGET_CFLAGS)"
 
 define Package/dump1090/install
 	$(INSTALL_DIR) $(1)/usr/bin

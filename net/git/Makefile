@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2009-2012 OpenWrt.org
+# Copyright (C) 2009-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=git
-PKG_VERSION:=1.8.4.4
+PKG_VERSION:=1.9.1
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://git-core.googlecode.com/files/
-PKG_MD5SUM:=c07ea15d5d0c31544de265f567d6e5ef
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=@KERNEL/software/scm/git/
+PKG_MD5SUM:=d65ca55041898c226e532425fc673035
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
